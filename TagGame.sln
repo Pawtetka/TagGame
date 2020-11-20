@@ -3,12 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30717.126
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TagGameBLL", "TagGameBLL\TagGameBLL.csproj", "{97617B76-82ED-43BE-A1AF-094EC64A210A}"
-	ProjectSection(ProjectDependencies) = postProject
-		{EA03FB04-400F-486E-8DCA-51E054BA53C5} = {EA03FB04-400F-486E-8DCA-51E054BA53C5}
-	EndProjectSection
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TagGameBLL", "TagGameBLL\TagGameBLL.csproj", "{97617B76-82ED-43BE-A1AF-094EC64A210A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TagGameConsole", "TagGameConsole\TagGameConsole.csproj", "{EA03FB04-400F-486E-8DCA-51E054BA53C5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TagGameConsole", "TagGameConsole\TagGameConsole.csproj", "{EA03FB04-400F-486E-8DCA-51E054BA53C5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{97617B76-82ED-43BE-A1AF-094EC64A210A} = {97617B76-82ED-43BE-A1AF-094EC64A210A}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

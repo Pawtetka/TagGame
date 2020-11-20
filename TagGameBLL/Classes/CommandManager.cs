@@ -23,7 +23,10 @@ namespace TagGameBLL.Classes
 
         public void UndoAction(GameController gameController)
         {
-            _moveCellCommand.Undo();
+            if (_moveCellCommand != null)
+            {
+                _moveCellCommand.Undo();
+            }
         }
 
         public void SetStartGameCommand(int size, Difficult difficult)

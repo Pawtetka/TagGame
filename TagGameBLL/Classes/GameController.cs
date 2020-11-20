@@ -18,25 +18,25 @@ namespace TagGameBLL.Classes
         {
             switch (direction)
             {
-                case Direction.Left:
+                case Direction.Down:
                     if (row + 1 < _fieldInfo.FieldSize)
                     {
                         return _fieldInfo.Field.GetCell(row + 1, column);
                     }
                     else return null;
-                case Direction.Right:
+                case Direction.Up:
                     if (row > 0)
                     {
                         return _fieldInfo.Field.GetCell(row - 1, column);
                     }
                     else return null;
-                case Direction.Up:
+                case Direction.Right:
                     if (column > 0)
                     {
                         return _fieldInfo.Field.GetCell(row, column - 1);
                     }
                     else return null;
-                case Direction.Down:
+                case Direction.Left:
                     if (column + 1 < _fieldInfo.FieldSize)
                     {
                         return _fieldInfo.Field.GetCell(row, column + 1);

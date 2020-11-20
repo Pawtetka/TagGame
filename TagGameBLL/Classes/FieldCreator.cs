@@ -21,10 +21,12 @@ namespace TagGameBLL.Classes
         private void CreateCellsAndPool(int size)
         {
             _cells = new Cell[size, size];
-            for (int i = 1; i < size; i++)
+            _numberPool = new List<int>();
+            for (int i = 1; i < size * size; i++)
             {
                 _numberPool.Add(i);
             }
+            _numberPool.Add(0);
         }
 
         private void FillCells(Difficult difficult)
@@ -34,6 +36,7 @@ namespace TagGameBLL.Classes
             {
                 for (int column = 0; column < _fieldInfo.FieldSize; column++)
                 {
+                    _cells[row, column] = new Cell();
                     _cells[row, column].Row = row;
                     _cells[row, column].Column = column;
 
@@ -45,13 +48,14 @@ namespace TagGameBLL.Classes
                 }
             }
 
-            foreach(int number in _numberPool)
+            _numberPool.RemoveAll(number => number == 0);
+            /*foreach(int number in _numberPool)
             {
                 if (number == 0)
                 {
                     _numberPool.Remove(number);
                 }
-            }
+            }*/
 
             for (int row = 0; row < _fieldInfo.FieldSize; row++)
             {
