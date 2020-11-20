@@ -20,7 +20,7 @@ namespace TagGameBLL.Classes
             return _cells[row, column];
         }
 
-        /*public Cell GetEmptyCellCoordinates()
+        public Cell GetEmptyCell()
         {
             foreach (Cell cell in _cells)
             {
@@ -30,7 +30,12 @@ namespace TagGameBLL.Classes
                 }
             }
             return null;
-        }*/
+        }
+
+        public void SetCells(Cell[,] cells)
+        {
+            _cells = cells;
+        }
 
         public FieldMemento SaveState()
         {

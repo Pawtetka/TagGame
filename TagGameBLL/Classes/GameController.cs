@@ -12,18 +12,39 @@ namespace TagGameBLL.Classes
         {
             _fieldInfo = FieldInfo.GetInstance();
         }
-
-        /*public void SelectCell(int raw, int column)
-        {
-            if (_fieldInfo.Field.GetSelectedCell() != null)
-            {
-                _fieldInfo.Field.GetSelectedCell().IsSelected = false;
-            }
-            _fieldInfo.Field.GetCell(raw, column).IsSelected = true;
-            SaveFieldState();
-        }*/
-
         abstract public void MoveCell(Direction moveDirection);
+
+        protected Cell ChooseMovingCell(int row, int column, Direction direction)
+        {
+            switch (direction)
+            {
+                case Direction.Left:
+                    if (row + 1 < _fieldInfo.FieldSize)
+                    {
+                        return _fieldInfo.Field.GetCell(row + 1, column);
+                    }
+                    else return null;
+                case Direction.Right:
+                    if (row > 0)
+                    {
+                        return _fieldInfo.Field.GetCell(row - 1, column);
+                    }
+                    else return null;
+                case Direction.Up:
+                    if (column > 0)
+                    {
+                        return _fieldInfo.Field.GetCell(row, column - 1);
+                    }
+                    else return null;
+                case Direction.Down:
+                    if (column + 1 < _fieldInfo.FieldSize)
+                    {
+                        return _fieldInfo.Field.GetCell(row, column + 1);
+                    }
+                    else return null;
+            }
+            return null;
+        }
 
         public void SaveFieldState()
         {
