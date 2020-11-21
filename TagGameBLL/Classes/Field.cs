@@ -10,6 +10,8 @@ namespace TagGameBLL.Classes
 
         public Field() { }
 
+        private int[,] _winState;
+
         public Field(int size)
         {
             _cells = new Cell[size,size];
@@ -35,6 +37,23 @@ namespace TagGameBLL.Classes
         public void SetCells(Cell[,] cells)
         {
             _cells = cells;
+        }
+
+        public void SetWinState(int[,] winState)
+        {
+            _winState = winState;
+        }
+
+        public bool CheckWinState()
+        {
+            foreach (Cell cell in _cells)
+            {
+                if (cell.Number != _winState[cell.Row, cell.Column])
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         public FieldMemento SaveState()

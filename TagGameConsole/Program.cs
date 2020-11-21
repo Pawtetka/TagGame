@@ -12,33 +12,8 @@ namespace TagGameConsole
             ConfigureServices(services);
             var serviceProvider = services.BuildServiceProvider();
 
-            var gameManager = serviceProvider.GetService<IGameManager>();
-            gameManager.StartGame(5, 1);
-            var field = gameManager.GetField();
-            for (int row = 0; row < 5; row++)
-            {
-                for (int column = 0; column < 5; column++)
-                {
-                    Console.Write(field[row, column] + " ");
-                }
-                Console.Write("\n");
-            }
-
-            while (true)
-            {
-                Console.ReadKey();
-                gameManager.MoveCell(1);
-                Console.Clear();
-                field = gameManager.GetField();
-                for (int row = 0; row < 5; row++)
-                {
-                    for (int column = 0; column < 5; column++)
-                    {
-                        Console.Write(field[row, column] + " ");
-                    }
-                    Console.Write("\n");
-                }
-            }
+            var presenter = serviceProvider.GetService<Presenter>();
+            presenter.ShowMenu();
         }
 
         private static void ConfigureServices(IServiceCollection services)
@@ -46,6 +21,8 @@ namespace TagGameConsole
             services.AddTransient<IGameManager, GameManager>();
             services.AddTransient<CommandManager, CommandManager>();
             services.AddTransient<IFieldCreator, FieldCreator>();
+            services.AddTransient<Presenter, Presenter>();
+            services.AddTransient<IView, View>();
         }
 
     }

@@ -18,13 +18,13 @@ namespace TagGameBLL.Classes
         {
             switch (direction)
             {
-                case Direction.Down:
+                case Direction.Up:
                     if (row + 1 < _fieldInfo.FieldSize)
                     {
                         return _fieldInfo.Field.GetCell(row + 1, column);
                     }
                     else return null;
-                case Direction.Up:
+                case Direction.Down:
                     if (row > 0)
                     {
                         return _fieldInfo.Field.GetCell(row - 1, column);
@@ -45,6 +45,7 @@ namespace TagGameBLL.Classes
             }
             return null;
         }
+
 
         public void SaveFieldState()
         {

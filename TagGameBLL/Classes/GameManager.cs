@@ -20,7 +20,7 @@ namespace TagGameBLL.Classes
         {
             if (difficult == (int)Difficult.Bonus)
             {
-                _gameControllerCreator = new StandartGameControllerCreator();
+                _gameControllerCreator = new BonusGameControllerCreator();
             }
             else
             {
@@ -51,6 +51,11 @@ namespace TagGameBLL.Classes
                 }
             }
             return field;
+        }
+
+        public bool CheckWin()
+        {
+            return _fieldInfo.Field.CheckWinState();
         }
     }
 }

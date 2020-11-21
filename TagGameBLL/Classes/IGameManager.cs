@@ -10,6 +10,6 @@ namespace TagGameBLL.Classes
         void MoveCell(int direction);
         void UndoAction();
         int[,] GetField();
-
+        bool CheckWin();
     }
 }

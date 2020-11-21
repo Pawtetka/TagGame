@@ -7,6 +7,7 @@ namespace TagGameBLL.Classes
     public class FieldCreator : IFieldCreator
     {
         private Cell[,] _cells;
+        private int[,] _winState;
         private int _rndCoef;
         private List<int> _numberPool;
         private FieldInfo _fieldInfo = FieldInfo.GetInstance();
@@ -16,6 +17,12 @@ namespace TagGameBLL.Classes
             CreateCellsAndPool(size);
             FillCells(difficult);
             _fieldInfo.Field.SetCells(_cells);
+            CountWinState();
+            _fieldInfo.Field.SetWinState(_winState);
+            if (_fieldInfo.Field.CheckWinState())
+            {
+                GenerateField(size, difficult);
+            }
         }
 
         private void CreateCellsAndPool(int size)
@@ -49,13 +56,6 @@ namespace TagGameBLL.Classes
             }
 
             _numberPool.RemoveAll(number => number == 0);
-            /*foreach(int number in _numberPool)
-            {
-                if (number == 0)
-                {
-                    _numberPool.Remove(number);
-                }
-            }*/
 
             for (int row = 0; row < _fieldInfo.FieldSize; row++)
             {
@@ -79,18 +79,31 @@ namespace TagGameBLL.Classes
             switch (difficult)
             {
                 case Difficult.Easy:
-                    _rndCoef = 25;
-                    break;
-                case Difficult.Medium:
                     _rndCoef = 50;
                     break;
+                case Difficult.Medium:
+                    _rndCoef = 65;
+                    break;
                 case Difficult.Hard:
-                    _rndCoef = 75;
+                    _rndCoef = 80;
                     break;
                 case Difficult.Bonus:
-                    _rndCoef = 75;
+                    _rndCoef = 80;
                     break;
             }
+        }
+
+        private void CountWinState()
+        {
+            _winState = new int[_fieldInfo.FieldSize, _fieldInfo.FieldSize];
+            for (int row = 0; row < _fieldInfo.FieldSize; row++)
+            {
+                for (int column = 0; column < _fieldInfo.FieldSize; column++)
+                {
+                    _winState[row, column] = row * _fieldInfo.FieldSize + column + 1;
+                }
+            }
+            _winState[_fieldInfo.FieldSize - 1, _fieldInfo.FieldSize - 1] = 0;
         }
 
         public void DeleteField()
