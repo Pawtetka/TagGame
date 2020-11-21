@@ -24,6 +24,5 @@ namespace TagGameConsole
             services.AddTransient<Presenter, Presenter>();
             services.AddTransient<IView, View>();
         }
-
     }
 }

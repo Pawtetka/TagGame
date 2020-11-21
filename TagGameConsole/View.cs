@@ -53,7 +53,7 @@ namespace TagGameConsole
             {
                 for (int column = 0; column < numbers.GetLength(1); column++)
                 {
-                    Console.Write(numbers[row, column] + " ");
+                    Console.Write(String.Format("{0, 3}", numbers[row, column]) + " ");
                 }
                 Console.Write("\n");
             }
@@ -80,35 +80,20 @@ namespace TagGameConsole
             Console.Clear();
             Console.WriteLine("Okey, lets choose some important thinks first\n" +
                               "Write the field size \n(for example, if you will write 5, field will be 5x5)");
-            var size = Console.ReadLine();
             try
             {
-                if (Convert.ToInt32(size) >= 0)
-                {
-                    FieldSize = Convert.ToInt32(size);
-                }
-                else
-                {
-                    Console.WriteLine("Wrong number! Try again");
-                    ShowPlayConfig();
-                }
+                var size = Console.ReadLine();
+                FieldSize = Convert.ToInt32(size);
 
                 Console.WriteLine("Choose your difficult level:\n" +
                                   "1. Easy\n" +
                                   "2. Medium\n" +
                                   "3. Hard\n" +
                                   "4. Bonus Game");
+
                 var difficult = Console.ReadLine();
             
-                if (Convert.ToInt32(difficult) > 0 && Convert.ToInt32(difficult) < 5)
-                {
-                    Difficult = Convert.ToInt32(difficult) - 1;
-                }
-                else
-                {
-                    Console.WriteLine("Wrong number! Try again");
-                    ShowPlayConfig();
-                }
+                Difficult = Convert.ToInt32(difficult) - 1;
 
                 Console.WriteLine("Good! Press any key to continue :)");
                 Console.ReadKey();
@@ -116,7 +101,20 @@ namespace TagGameConsole
             }
             catch (FormatException e)
             {
+                Console.WriteLine(e.Message);
                 Console.WriteLine("Wrong number! Try again!");
+                ShowPlayConfig();
+            }
+            catch (WrongSizeException e)
+            {
+                Console.WriteLine(e.Message);
+                Console.WriteLine("Wrong number! Try again");
+                ShowPlayConfig();
+            }
+            catch (WrongDifficultException e)
+            {
+                Console.WriteLine(e.Message);
+                Console.WriteLine("Wrong number! Try again");
                 ShowPlayConfig();
             }
 
@@ -166,6 +164,12 @@ namespace TagGameConsole
             {
                 Console.WriteLine(e.Message +
                                   "\nYou can't do this move. Try another");
+                ListenKey();
+            }
+            catch (EmptyHistoryException e)
+            {
+                Console.WriteLine(e.Message +
+                                  "\nHistory is empty. You can't undo action now");
                 ListenKey();
             }
             

@@ -19,7 +19,6 @@ namespace TagGameBLL.Classes
 
         public Cell[,] GetState()
         {
-            //return _cellsState;
             Cell[,] cells = new Cell[_cellsState.GetLength(0), _cellsState.GetLength(1)];
             for (int row = 0; row < _cellsState.GetLength(0); row++)
             {

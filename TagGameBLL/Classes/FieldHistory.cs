@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using TagGameBLL.Exceptions;
 
 namespace TagGameBLL.Classes
 {
@@ -20,6 +21,10 @@ namespace TagGameBLL.Classes
 
         public FieldMemento PopState()
         {
+            if (history.Count == 0)
+            {
+                throw new EmptyHistoryException("History is empty");
+            }
             return history.Pop();
         }
     }

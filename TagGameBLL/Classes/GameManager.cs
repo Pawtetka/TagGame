@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using TagGameBLL.Exceptions;
 
 namespace TagGameBLL.Classes
 {
@@ -18,6 +19,14 @@ namespace TagGameBLL.Classes
         }
         public void StartGame(int size, int difficult)
         {
+            if (difficult < 0 || difficult > 3)
+            {
+                throw new WrongDifficultException("Wrong difficult");
+            }
+            if (size <= 0)
+            {
+                throw new WrongSizeException("Wrong size");
+            }
             if (difficult == (int)Difficult.Bonus)
             {
                 _gameControllerCreator = new BonusGameControllerCreator();
@@ -32,6 +41,10 @@ namespace TagGameBLL.Classes
 
         public void MoveCell(int direction)
         {
+            if (direction < 0 || direction > 3)
+            {
+                throw new WrongMoveDirectionException("Wrong direction");
+            }
             _commandManager.MoveCell((Direction)direction, _gameController);
         }
 
