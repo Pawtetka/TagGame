@@ -19,7 +19,7 @@ namespace TagGameConsole
         private static void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<IGameManager, GameManager>();
-            services.AddTransient<CommandManager, CommandManager>();
+            services.AddTransient<ICommandManager, CommandManager>();
             services.AddTransient<IFieldCreator, FieldCreator>();
             services.AddTransient<Presenter, Presenter>();
             services.AddTransient<IView, View>();

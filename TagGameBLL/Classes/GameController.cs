@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using TagGameBLL.Exceptions;
 
 namespace TagGameBLL.Classes
 {
@@ -23,27 +24,29 @@ namespace TagGameBLL.Classes
                     {
                         return _fieldInfo.Field.GetCell(row + 1, column);
                     }
-                    else return null;
+                    else throw new WrongMoveDirectionException("Wrong direction!");
                 case Direction.Down:
                     if (row > 0)
                     {
                         return _fieldInfo.Field.GetCell(row - 1, column);
                     }
-                    else return null;
+                    else throw new WrongMoveDirectionException("Wrong direction!");
                 case Direction.Right:
                     if (column > 0)
                     {
                         return _fieldInfo.Field.GetCell(row, column - 1);
                     }
-                    else return null;
+                    else throw new WrongMoveDirectionException("Wrong direction!");
                 case Direction.Left:
                     if (column + 1 < _fieldInfo.FieldSize)
                     {
                         return _fieldInfo.Field.GetCell(row, column + 1);
                     }
-                    else return null;
+                    else throw new WrongMoveDirectionException("Wrong direction!");
+                default:
+                    break;
             }
-            return null;
+            throw new WrongMoveDirectionException("Wrong direction!");
         }
 
 
@@ -56,6 +59,5 @@ namespace TagGameBLL.Classes
         {
             _fieldInfo.Field.RestoreState(_fieldInfo.FieldHistory.PopState());
         }
-
     }
 }

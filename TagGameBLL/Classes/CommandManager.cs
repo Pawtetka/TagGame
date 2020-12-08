@@ -4,39 +4,39 @@ using System.Text;
 
 namespace TagGameBLL.Classes
 {
-    public class CommandManager
+    public class CommandManager : ICommandManager
     {
-        private ICommand _moveCellCommand;
-        private ICommand _startGameCommand;
-
-        public void StartGame(int size, Difficult difficult)
+        private CommandHistory _commandHistory;
+        public CommandManager()
         {
-            SetStartGameCommand(size, difficult);
-            _startGameCommand.Execute();
+            _commandHistory = new CommandHistory();
         }
 
-        public void MoveCell(Direction direction, GameController gameController)
+        public void StartGame(ICommand startGameCommand)
         {
-            SetMoveCellCommand(direction, gameController);
-            _moveCellCommand.Execute();
+            startGameCommand.Execute();
+            _commandHistory.SaveCommand(startGameCommand);
+        }
+
+        public void MoveCell(ICommand moveCellCommand)
+        {
+            moveCellCommand.Execute();
+            _commandHistory.SaveCommand(moveCellCommand);
         }
 
         public void UndoAction(GameController gameController)
         {
-            if (_moveCellCommand != null)
-            {
-                _moveCellCommand.Undo();
-            }
+            _commandHistory.GetCommand().Undo();
         }
 
-        public void SetStartGameCommand(int size, Difficult difficult)
+        public ICommand CreateStartGameCommand(int size, Difficult difficult, IFieldCreator fieldCreator)
         {
-            _startGameCommand = new StartGameCommand(size, difficult, new FieldCreator());
+            return new StartGameCommand(size, difficult, fieldCreator);
         }
 
-        public void SetMoveCellCommand(Direction direction, GameController gameController)
+        public ICommand SetMoveCellCommand(Direction direction, GameController gameController)
         {
-            _moveCellCommand = new MoveCellCommand(direction, gameController);
+            return new MoveCellCommand(direction, gameController);
         }
     }
 }

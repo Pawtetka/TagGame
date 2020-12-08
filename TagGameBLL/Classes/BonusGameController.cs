@@ -21,10 +21,6 @@ namespace TagGameBLL.Classes
             {
                 Cell emptyCell = _fieldInfo.Field.GetEmptyCell();
                 Cell moveCell = ChooseMovingCell(emptyCell.Row, emptyCell.Column, moveDirection);
-                if (moveCell == null)
-                {
-                    throw new WrongMoveDirectionException("Wrong direction!");
-                }
                 _fieldInfo.Field.GetEmptyCell().Number = moveCell.Number;
                 _fieldInfo.Field.GetCell(moveCell.Row, moveCell.Column).Number = 0;
             }
@@ -43,16 +39,18 @@ namespace TagGameBLL.Classes
         private void DoRndMove(Direction moveDirection)
         {
             Cell emptyCell = _fieldInfo.Field.GetEmptyCell();
-            Cell moveCell = ChooseMovingCell(emptyCell.Row, emptyCell.Column, moveDirection);
-            if (moveCell == null)
+            Cell moveCell = new Cell();
+            try
+            {
+                moveCell = ChooseMovingCell(emptyCell.Row, emptyCell.Column, moveDirection);
+            }
+            catch (WrongMoveDirectionException e)
             {
                 DoRndMove((Direction)CountRndMoveDirection());
+                return;
             }
-            else
-            {
-                _fieldInfo.Field.GetEmptyCell().Number = moveCell.Number;
-                _fieldInfo.Field.GetCell(moveCell.Row, moveCell.Column).Number = 0;
-            }
+            _fieldInfo.Field.GetEmptyCell().Number = moveCell.Number;
+            _fieldInfo.Field.GetCell(moveCell.Row, moveCell.Column).Number = 0;
         }
     }
 }

@@ -7,12 +7,12 @@ namespace TagGameBLL.Classes
 {
     public class GameManager : IGameManager
     {
-        private CommandManager _commandManager;
+        private ICommandManager _commandManager;
         private GameController _gameController;
         private GameControllerCreator _gameControllerCreator;
         private FieldInfo _fieldInfo;
 
-        public GameManager(CommandManager commandManager)
+        public GameManager(ICommandManager commandManager)
         {
             _commandManager = commandManager;
             _fieldInfo = FieldInfo.GetInstance();
@@ -27,6 +27,13 @@ namespace TagGameBLL.Classes
             {
                 throw new WrongSizeException("Wrong size");
             }
+            CreateController(difficult);
+            var command = _commandManager.CreateStartGameCommand(size, (Difficult)difficult, new FieldCreator());
+            _commandManager.StartGame(command);
+        }
+
+        private void CreateController(int difficult)
+        {
             if (difficult == (int)Difficult.Bonus)
             {
                 _gameControllerCreator = new BonusGameControllerCreator();
@@ -36,7 +43,6 @@ namespace TagGameBLL.Classes
                 _gameControllerCreator = new StandartGameControllerCreator();
             }
             _gameController = _gameControllerCreator.CreateController();
-            _commandManager.StartGame(size, (Difficult)difficult);
         }
 
         public void MoveCell(int direction)
@@ -45,7 +51,8 @@ namespace TagGameBLL.Classes
             {
                 throw new WrongMoveDirectionException("Wrong direction");
             }
-            _commandManager.MoveCell((Direction)direction, _gameController);
+            var command = _commandManager.SetMoveCellCommand((Direction)direction, _gameController);
+            _commandManager.MoveCell(command);
         }
 
 
@@ -53,6 +60,7 @@ namespace TagGameBLL.Classes
         {
             _commandManager.UndoAction(_gameController);
         }
+
         public int[,] GetField()
         {
             int[,] field = new int[_fieldInfo.FieldSize, _fieldInfo.FieldSize];
