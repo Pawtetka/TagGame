@@ -24,7 +24,7 @@ namespace TagGameBLL.Classes
             _commandHistory.SaveCommand(moveCellCommand);
         }
 
-        public void UndoAction(GameController gameController)
+        public void UndoAction()
         {
             _commandHistory.GetCommand().Undo();
         }

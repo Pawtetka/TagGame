@@ -10,6 +10,6 @@ namespace TagGameBLL.Classes
         void MoveCell(ICommand command);
         ICommand CreateStartGameCommand(int size, Difficult difficult, IFieldCreator fieldCreator);
         ICommand SetMoveCellCommand(Direction direction, GameController gameController);
-        void UndoAction(GameController gameController);
+        void UndoAction();
     }
 }

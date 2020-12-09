@@ -58,7 +58,7 @@ namespace TagGameBLL.Classes
 
         public void UndoAction()
         {
-            _commandManager.UndoAction(_gameController);
+            _commandManager.UndoAction();
         }
 
         public int[,] GetField()

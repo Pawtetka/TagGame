@@ -18,7 +18,7 @@ namespace TagGameBLLTests
             //Arrange
             var gameManager = new GameManager(new CommandManager());
             //Act
-            //Accert
+            //Assert
             Assert.Throws<WrongDifficultException>(() => gameManager.StartGame(0, difficult));
         }
 
@@ -30,14 +30,14 @@ namespace TagGameBLLTests
             //Arrange
             var gameManager = new GameManager(new CommandManager());
             //Act
-            //Accert
+            //Assert
             Assert.Throws<WrongSizeException>(() => gameManager.StartGame(size, 1));
         }
 
         [Theory]
         [InlineData(3, 0)]
         [InlineData(5, 3)]
-        public void StartGame_Success_MethodTriggered(int size, int difficult)
+        public void StartGame_Success_StartGameMethodTriggered(int size, int difficult)
         {
             //Arrange
             var mock = new Mock<ICommandManager>();
@@ -47,7 +47,7 @@ namespace TagGameBLLTests
             var gameManager = new GameManager(mock.Object);
             //Act
             gameManager.StartGame(size, difficult);
-            //Accert
+            //Assert
             mock.Verify(manager => manager.StartGame(command));
         }
 
@@ -59,13 +59,13 @@ namespace TagGameBLLTests
             //Arrange
             var gameManager = new GameManager(new CommandManager());
             //Act
-            //Accert
+            //Assert
             Assert.Throws<WrongMoveDirectionException>(() => gameManager.MoveCell(direction));
         }
 
         [Theory]
         [InlineData(0)]
-        public void MoveCell_Success_MethodTriggered(int direction)
+        public void MoveCell_Success_MoveCellMethodTriggered(int direction)
         {
             //Arrange
             var mock = new Mock<ICommandManager>();
@@ -75,10 +75,54 @@ namespace TagGameBLLTests
             var gameManager = new GameManager(mock.Object);
             //Act
             gameManager.MoveCell(direction);
-            //Accert
+            //Assert
             mock.Verify(manager => manager.MoveCell(command));
         }
 
+        [Fact]
+        public void UndoAction_Success_UndoMethodTriggered()
+        {
+            //Arrange
+            var mock = new Mock<ICommandManager>();
+            var gameManager = new GameManager(mock.Object);
+            //Act
+            gameManager.UndoAction();
+            //Assert
+            mock.Verify(manager => manager.UndoAction());
+        }
 
+        [Fact]
+        public void GetField_Success_FieldReturned()
+        {
+            //Arrange
+            var gameManager = new GameManager(new CommandManager());
+            //Act
+            int[,] rezult = gameManager.GetField();
+            //Assert
+            Assert.NotNull(rezult);
+        }
+
+        [Fact]
+        public void CheckWin_Success_BoolReturned()
+        {
+            //Arrange
+            var gameManager = new GameManager(new CommandManager());
+            Field fieldStub = new Field();
+            Cell[,] cellsStub = { 
+                { new Cell{ Number = 1, Row = 0, Column = 0 }, new Cell{ Number = 2, Row = 0, Column = 1 } }, 
+                { new Cell{ Number = 3, Row = 1, Column = 0 }, new Cell{ Number = 0, Row = 1, Column = 1 } } 
+            };
+            int[,] winStateStub = {
+                { 1, 2 },
+                { 3, 0 }
+            };
+            fieldStub.SetCells(cellsStub);
+            fieldStub.SetWinState(winStateStub);
+            FieldInfo.GetInstance().Field = fieldStub;
+            //Act
+            bool rezult = gameManager.CheckWin();
+            //Assert
+            Assert.True(rezult);
+        }
     }
 }
