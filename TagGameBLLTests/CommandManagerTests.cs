@@ -35,7 +35,7 @@ namespace TagGameBLLTests
         }
 
         [Theory]
-        [ClassData(typeof(StartGameTestData))]
+        [ClassData(typeof(StartGameCommandTestData))]
         public void CreateStartGameCommand_Success_CommandReturned(int size, Difficult difficult, IFieldCreator fieldCreator)
         {
             //Arrange
@@ -47,7 +47,7 @@ namespace TagGameBLLTests
         }
 
         [Theory]
-        [ClassData(typeof(MoveCellTestData))]
+        [ClassData(typeof(MoveCellCommandTestData))]
         public void CreateMoveCellCommand_Success_CommandReturned(Direction direction, GameController gameController)
         {
             //Arrange
@@ -59,7 +59,7 @@ namespace TagGameBLLTests
         }
     }
 
-    public class StartGameTestData : IEnumerable<object[]>
+    public class StartGameCommandTestData : IEnumerable<object[]>
     {
         public IEnumerator<object[]> GetEnumerator()
         {
@@ -69,11 +69,11 @@ namespace TagGameBLLTests
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 
-    public class MoveCellTestData : IEnumerable<object[]>
+    public class MoveCellCommandTestData : IEnumerable<object[]>
     {
         public IEnumerator<object[]> GetEnumerator()
         {
-            yield return new object[] { Direction.Down, new StandartGameController() };
+            yield return new object[] { Direction.Down, new StandartGameController(new FieldInfo()) };
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

@@ -6,7 +6,7 @@ namespace TagGameBLL.Classes
 {
     public class Field
     {
-        private Cell[,] _cells;
+        public Cell[,] Cells { get; set;} = new Cell[0,0];
 
         public Field() { }
 
@@ -14,17 +14,12 @@ namespace TagGameBLL.Classes
 
         public Field(int size)
         {
-            _cells = new Cell[size,size];
-        }
-
-        public Cell GetCell(int row, int column)
-        {
-            return _cells[row, column];
+            Cells = new Cell[size,size];
         }
 
         public Cell GetEmptyCell()
         {
-            foreach (Cell cell in _cells)
+            foreach (Cell cell in Cells)
             {
                 if (cell.Number == 0)
                 {
@@ -34,11 +29,6 @@ namespace TagGameBLL.Classes
             return null;
         }
 
-        public void SetCells(Cell[,] cells)
-        {
-            _cells = cells;
-        }
-
         public void SetWinState(int[,] winState)
         {
             _winState = winState;
@@ -46,7 +36,7 @@ namespace TagGameBLL.Classes
 
         public bool CheckWinState()
         {
-            foreach (Cell cell in _cells)
+            foreach (Cell cell in Cells)
             {
                 if (cell.Number != _winState[cell.Row, cell.Column])
                 {
@@ -58,12 +48,12 @@ namespace TagGameBLL.Classes
 
         public FieldMemento SaveState()
         {
-            return new FieldMemento(_cells);
+            return new FieldMemento(Cells);
         }
 
         public void RestoreState(FieldMemento memento)
         {
-            _cells = memento.GetState();
+            Cells = memento.GetState();
         }
     }
 }

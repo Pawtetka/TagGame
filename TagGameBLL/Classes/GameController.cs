@@ -7,11 +7,12 @@ namespace TagGameBLL.Classes
 {
     abstract public class GameController
     {
-        protected FieldInfo _fieldInfo;
+        protected IFieldInfo _fieldInfo;
 
-        public GameController()
+        public GameController() { }
+        public GameController(IFieldInfo fieldInfo)
         {
-            _fieldInfo = FieldInfo.GetInstance();
+            _fieldInfo = fieldInfo;
         }
         abstract public void MoveCell(Direction moveDirection);
 
@@ -20,27 +21,27 @@ namespace TagGameBLL.Classes
             switch (direction)
             {
                 case Direction.Up:
-                    if (row + 1 < _fieldInfo.FieldSize)
+                    if (row + 1 < _fieldInfo.Field.Cells.GetUpperBound(0) + 1)
                     {
-                        return _fieldInfo.Field.GetCell(row + 1, column);
+                        return _fieldInfo.Field.Cells[row + 1, column];
                     }
                     else throw new WrongMoveDirectionException("Wrong direction!");
                 case Direction.Down:
                     if (row > 0)
                     {
-                        return _fieldInfo.Field.GetCell(row - 1, column);
+                        return _fieldInfo.Field.Cells[row - 1, column];
                     }
                     else throw new WrongMoveDirectionException("Wrong direction!");
                 case Direction.Right:
                     if (column > 0)
                     {
-                        return _fieldInfo.Field.GetCell(row, column - 1);
+                        return _fieldInfo.Field.Cells[row, column - 1];
                     }
                     else throw new WrongMoveDirectionException("Wrong direction!");
                 case Direction.Left:
-                    if (column + 1 < _fieldInfo.FieldSize)
+                    if (column + 1 < _fieldInfo.Field.Cells.GetUpperBound(0) + 1)
                     {
-                        return _fieldInfo.Field.GetCell(row, column + 1);
+                        return _fieldInfo.Field.Cells[row, column + 1];
                     }
                     else throw new WrongMoveDirectionException("Wrong direction!");
                 default:

@@ -10,13 +10,17 @@ namespace TagGameBLL.Classes
         private int[,] _winState;
         private int _rndCoef;
         private List<int> _numberPool;
-        private FieldInfo _fieldInfo = FieldInfo.GetInstance();
+        private IFieldInfo _fieldInfo;
+        public FieldCreator() { }
+        public FieldCreator(IFieldInfo fieldInfo)
+        {
+            _fieldInfo = fieldInfo;
+        }
         public void GenerateField(int size, Difficult difficult)
         {
-            _fieldInfo.FieldSize = size;
             CreateCellsAndPool(size);
             FillCells(difficult);
-            _fieldInfo.Field.SetCells(_cells);
+            _fieldInfo.Field.Cells = _cells;
             CountWinState();
             _fieldInfo.Field.SetWinState(_winState);
             if (_fieldInfo.Field.CheckWinState())
@@ -39,9 +43,9 @@ namespace TagGameBLL.Classes
         private void FillCells(Difficult difficult)
         {
             CountRndCoef(difficult);
-            for (int row = 0; row < _fieldInfo.FieldSize; row++)
+            for (int row = 0; row < _cells.GetUpperBound(0) + 1; row++)
             {
-                for (int column = 0; column < _fieldInfo.FieldSize; column++)
+                for (int column = 0; column < _cells.GetUpperBound(0) + 1; column++)
                 {
                     _cells[row, column] = new Cell();
                     _cells[row, column].Row = row;
@@ -49,19 +53,19 @@ namespace TagGameBLL.Classes
 
                     if (new Random().Next(0, 100) > _rndCoef)
                     {
-                        _cells[row, column].Number = _numberPool[row * _fieldInfo.FieldSize + column];
-                        _numberPool[row * _fieldInfo.FieldSize + column] = 0;
+                        _cells[row, column].Number = _numberPool[row * (_cells.GetUpperBound(0) + 1) + column];
+                        _numberPool[row * (_cells.GetUpperBound(0) + 1) + column] = 0;
                     }
                 }
             }
 
             _numberPool.RemoveAll(number => number == 0);
 
-            for (int row = 0; row < _fieldInfo.FieldSize; row++)
+            for (int row = 0; row < _cells.GetUpperBound(0) + 1; row++)
             {
-                for (int column = 0; column < _fieldInfo.FieldSize; column++)
+                for (int column = 0; column < _cells.GetUpperBound(0) + 1; column++)
                 {
-                    if (row == _fieldInfo.FieldSize - 1 && column == row)
+                    if (row == _cells.GetUpperBound(0) && column == row)
                     {
                         _cells[row, column].Number = 0;
                     }
@@ -95,21 +99,20 @@ namespace TagGameBLL.Classes
 
         private void CountWinState()
         {
-            _winState = new int[_fieldInfo.FieldSize, _fieldInfo.FieldSize];
-            for (int row = 0; row < _fieldInfo.FieldSize; row++)
+            _winState = new int[_cells.GetUpperBound(0) + 1, _cells.GetUpperBound(0) + 1];
+            for (int row = 0; row < _cells.GetUpperBound(0) + 1; row++)
             {
-                for (int column = 0; column < _fieldInfo.FieldSize; column++)
+                for (int column = 0; column < _cells.GetUpperBound(0) + 1; column++)
                 {
-                    _winState[row, column] = row * _fieldInfo.FieldSize + column + 1;
+                    _winState[row, column] = row *(_cells.GetUpperBound(0) + 1) + column + 1;
                 }
             }
-            _winState[_fieldInfo.FieldSize - 1, _fieldInfo.FieldSize - 1] = 0;
+            _winState[_cells.GetUpperBound(0), _cells.GetUpperBound(0)] = 0;
         }
 
         public void DeleteField()
         {
             _fieldInfo.Field = new Field();
-            _fieldInfo.FieldSize = 0;
         }
     }
 }

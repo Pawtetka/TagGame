@@ -16,7 +16,7 @@ namespace TagGameBLLTests
         public void StartGame_WrongDifficult_ThrowsWrongDifficultException(int difficult)
         {
             //Arrange
-            var gameManager = new GameManager(new CommandManager());
+            var gameManager = new GameManager(new CommandManager(), new FieldInfo());
             //Act
             //Assert
             Assert.Throws<WrongDifficultException>(() => gameManager.StartGame(0, difficult));
@@ -28,7 +28,7 @@ namespace TagGameBLLTests
         public void StartGame_WrongSize_ThrowsWrongSizeException(int size)
         {
             //Arrange
-            var gameManager = new GameManager(new CommandManager());
+            var gameManager = new GameManager(new CommandManager(), new FieldInfo()); ;
             //Act
             //Assert
             Assert.Throws<WrongSizeException>(() => gameManager.StartGame(size, 1));
@@ -44,7 +44,7 @@ namespace TagGameBLLTests
             ICommand command = new StartGameCommand(size, (Difficult)difficult, new FieldCreator());
             mock.Setup(manager => manager.CreateStartGameCommand(It.IsAny<int>(), It.IsAny<Difficult>(), It.IsAny<IFieldCreator>())).
                  Returns(command);
-            var gameManager = new GameManager(mock.Object);
+            var gameManager = new GameManager(mock.Object, new FieldInfo());
             //Act
             gameManager.StartGame(size, difficult);
             //Assert
@@ -57,7 +57,7 @@ namespace TagGameBLLTests
         public void MoveCell_WrongMoveDirection_ThrowWrongMoveDirectionException(int direction)
         {
             //Arrange
-            var gameManager = new GameManager(new CommandManager());
+            var gameManager = new GameManager(new CommandManager(), new FieldInfo());
             //Act
             //Assert
             Assert.Throws<WrongMoveDirectionException>(() => gameManager.MoveCell(direction));
@@ -69,10 +69,10 @@ namespace TagGameBLLTests
         {
             //Arrange
             var mock = new Mock<ICommandManager>();
-            ICommand command = new MoveCellCommand((Direction)direction, new StandartGameController());
+            ICommand command = new MoveCellCommand((Direction)direction, new StandartGameController(new FieldInfo()));
             mock.Setup(manager => manager.SetMoveCellCommand(It.IsAny<Direction>(), It.IsAny<GameController>())).
                  Returns(command);
-            var gameManager = new GameManager(mock.Object);
+            var gameManager = new GameManager(mock.Object, new FieldInfo());
             //Act
             gameManager.MoveCell(direction);
             //Assert
@@ -84,7 +84,7 @@ namespace TagGameBLLTests
         {
             //Arrange
             var mock = new Mock<ICommandManager>();
-            var gameManager = new GameManager(mock.Object);
+            var gameManager = new GameManager(mock.Object, new FieldInfo());
             //Act
             gameManager.UndoAction();
             //Assert
@@ -95,7 +95,7 @@ namespace TagGameBLLTests
         public void GetField_Success_FieldReturned()
         {
             //Arrange
-            var gameManager = new GameManager(new CommandManager());
+            var gameManager = new GameManager(new CommandManager(), new FieldInfo());
             //Act
             int[,] rezult = gameManager.GetField();
             //Assert
@@ -106,19 +106,18 @@ namespace TagGameBLLTests
         public void CheckWin_Success_BoolReturned()
         {
             //Arrange
-            var gameManager = new GameManager(new CommandManager());
-            Field fieldStub = new Field();
-            Cell[,] cellsStub = { 
-                { new Cell{ Number = 1, Row = 0, Column = 0 }, new Cell{ Number = 2, Row = 0, Column = 1 } }, 
-                { new Cell{ Number = 3, Row = 1, Column = 0 }, new Cell{ Number = 0, Row = 1, Column = 1 } } 
+            Field fieldStub = new Field { Cells = new Cell[,]{
+                { new Cell { Number = 1, Row = 0, Column = 0 }, new Cell { Number = 2, Row = 0, Column = 1 } },
+                { new Cell { Number = 3, Row = 1, Column = 0 }, new Cell { Number = 0, Row = 1, Column = 1 } } }
             };
             int[,] winStateStub = {
                 { 1, 2 },
                 { 3, 0 }
             };
-            fieldStub.SetCells(cellsStub);
             fieldStub.SetWinState(winStateStub);
-            FieldInfo.GetInstance().Field = fieldStub;
+            var fieldMock = new Mock<IFieldInfo>();
+            fieldMock.Setup(info => info.Field).Returns(fieldStub);
+            var gameManager = new GameManager(new CommandManager(), fieldMock.Object);
             //Act
             bool rezult = gameManager.CheckWin();
             //Assert

@@ -10,12 +10,12 @@ namespace TagGameBLL.Classes
         private ICommandManager _commandManager;
         private GameController _gameController;
         private GameControllerCreator _gameControllerCreator;
-        private FieldInfo _fieldInfo;
+        private IFieldInfo _fieldInfo;
 
-        public GameManager(ICommandManager commandManager)
+        public GameManager(ICommandManager commandManager, IFieldInfo fieldInfo)
         {
             _commandManager = commandManager;
-            _fieldInfo = FieldInfo.GetInstance();
+            _fieldInfo = fieldInfo;
         }
         public void StartGame(int size, int difficult)
         {
@@ -28,7 +28,7 @@ namespace TagGameBLL.Classes
                 throw new WrongSizeException("Wrong size");
             }
             CreateController(difficult);
-            var command = _commandManager.CreateStartGameCommand(size, (Difficult)difficult, new FieldCreator());
+            var command = _commandManager.CreateStartGameCommand(size, (Difficult)difficult, new FieldCreator(_fieldInfo));
             _commandManager.StartGame(command);
         }
 
@@ -42,7 +42,7 @@ namespace TagGameBLL.Classes
             {
                 _gameControllerCreator = new StandartGameControllerCreator();
             }
-            _gameController = _gameControllerCreator.CreateController();
+            _gameController = _gameControllerCreator.CreateController(_fieldInfo);
         }
 
         public void MoveCell(int direction)
@@ -63,12 +63,12 @@ namespace TagGameBLL.Classes
 
         public int[,] GetField()
         {
-            int[,] field = new int[_fieldInfo.FieldSize, _fieldInfo.FieldSize];
-            for (int row = 0; row < _fieldInfo.FieldSize; row++)
+            int[,] field = new int[_fieldInfo.Field.Cells.GetUpperBound(0) + 1, _fieldInfo.Field.Cells.GetUpperBound(0) + 1];
+            for (int row = 0; row < _fieldInfo.Field.Cells.GetUpperBound(0) + 1; row++)
             {
-                for (int column = 0; column < _fieldInfo.FieldSize; column++)
+                for (int column = 0; column < _fieldInfo.Field.Cells.GetUpperBound(0) + 1; column++)
                 {
-                    field[row, column] = _fieldInfo.Field.GetCell(row, column).Number;
+                    field[row, column] = _fieldInfo.Field.Cells[row, column].Number;
                 }
             }
             return field;

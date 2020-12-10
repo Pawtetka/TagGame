@@ -6,9 +6,9 @@ namespace TagGameBLL.Classes
 {
     public class StandartGameControllerCreator : GameControllerCreator
     {
-        public override GameController CreateController()
+        public override GameController CreateController(IFieldInfo fieldInfo)
         {
-            return new StandartGameController();
+            return new StandartGameController(fieldInfo);
         }
     }
 }

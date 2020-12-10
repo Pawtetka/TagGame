@@ -23,6 +23,7 @@ namespace TagGameConsole
             services.AddTransient<IFieldCreator, FieldCreator>();
             services.AddTransient<Presenter, Presenter>();
             services.AddTransient<IView, View>();
+            services.AddSingleton<IFieldInfo, FieldInfo>();
         }
     }
 }

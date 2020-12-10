@@ -6,9 +6,9 @@ namespace TagGameBLL.Classes
 {
     public class BonusGameControllerCreator : GameControllerCreator
     {
-        public override GameController CreateController()
+        public override GameController CreateController(IFieldInfo fieldInfo)
         {
-            return new BonusGameController();
+            return new BonusGameController(fieldInfo);
         }
     }
 }

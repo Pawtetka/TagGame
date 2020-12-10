@@ -6,6 +6,6 @@ namespace TagGameBLL.Classes
 {
     public abstract class GameControllerCreator
     {
-        public abstract GameController CreateController();
+        public abstract GameController CreateController(IFieldInfo fieldInfo);
     }
 }

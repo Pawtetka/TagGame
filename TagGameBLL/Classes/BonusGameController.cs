@@ -8,6 +8,8 @@ namespace TagGameBLL.Classes
     public class BonusGameController : GameController
     {
         private int rndMoveFrequency = 10;
+        public BonusGameController() : base() { }
+        public BonusGameController(IFieldInfo fieldInfo) : base(fieldInfo) { }
         public override void MoveCell(Direction moveDirection)
         {
             if (new Random().Next(0, 100) < rndMoveFrequency)
@@ -22,7 +24,7 @@ namespace TagGameBLL.Classes
                 Cell emptyCell = _fieldInfo.Field.GetEmptyCell();
                 Cell moveCell = ChooseMovingCell(emptyCell.Row, emptyCell.Column, moveDirection);
                 _fieldInfo.Field.GetEmptyCell().Number = moveCell.Number;
-                _fieldInfo.Field.GetCell(moveCell.Row, moveCell.Column).Number = 0;
+                _fieldInfo.Field.Cells[moveCell.Row, moveCell.Column].Number = 0;
             }
         }
 
@@ -50,7 +52,7 @@ namespace TagGameBLL.Classes
                 return;
             }
             _fieldInfo.Field.GetEmptyCell().Number = moveCell.Number;
-            _fieldInfo.Field.GetCell(moveCell.Row, moveCell.Column).Number = 0;
+            _fieldInfo.Field.Cells[moveCell.Row, moveCell.Column].Number = 0;
         }
     }
 }
