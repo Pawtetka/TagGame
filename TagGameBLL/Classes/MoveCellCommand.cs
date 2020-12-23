@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using TagGameBLL.Interfaces;
 
 namespace TagGameBLL.Classes
 {
     public class MoveCellCommand : ICommand
     {
-        private Direction _direction;
-        private GameController _gameController;
+        private readonly Direction _direction;
+        private readonly GameController _gameController;
 
         public MoveCellCommand(Direction direction, GameController gameController)
         {

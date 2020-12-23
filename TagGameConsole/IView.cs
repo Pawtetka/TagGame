@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace TagGameConsole
+﻿namespace TagGameConsole
 {
     public interface IView
     {
@@ -16,7 +12,5 @@ namespace TagGameConsole
         event View.Handler OnGameStarted;
         event View.Handler OnMoveSelected;
         event View.Handler OnUndoMove;
-
-
     }
 }

@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using TagGameBLL.Interfaces;
 
 namespace TagGameBLL.Classes
 {
     public class CommandManager : ICommandManager
     {
-        private CommandHistory _commandHistory;
+        private readonly CommandHistory _commandHistory;
+
         public CommandManager()
         {
             _commandHistory = new CommandHistory();

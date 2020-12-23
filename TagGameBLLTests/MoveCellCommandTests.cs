@@ -1,7 +1,4 @@
 ﻿using Moq;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using TagGameBLL.Classes;
 using Xunit;
 
@@ -9,21 +6,23 @@ namespace TagGameBLLTests
 {
     public class MoveCellCommandTests
     {
-        private Mock<GameController> mock;
+        private readonly Mock<GameController> _mock;
+
         public MoveCellCommandTests()
         {
-            mock = new Mock<GameController>(new FieldInfo());
+            _mock = new Mock<GameController>(new FieldInfo());
         }
+
         [Theory]
         [InlineData(Direction.Down)]
         public void Execute_Success_MoveCellMethodTriggered(Direction direction)
         {
             //Arrange
-            var command = new MoveCellCommand(direction, mock.Object);
+            var command = new MoveCellCommand(direction, _mock.Object);
             //Act
             command.Execute();
             //Assert
-            mock.Verify(controller => controller.MoveCell(direction));
+            _mock.Verify(controller => controller.MoveCell(direction));
         }
     }
 }

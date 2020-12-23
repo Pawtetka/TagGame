@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using TagGameBLL.Classes;
 
-namespace TagGameBLL.Classes
+namespace TagGameBLL.Interfaces
 {
     public interface ICommandManager
     {

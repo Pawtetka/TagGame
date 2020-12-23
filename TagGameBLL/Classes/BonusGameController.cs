@@ -1,30 +1,29 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using TagGameBLL.Exceptions;
+using TagGameBLL.Interfaces;
 
 namespace TagGameBLL.Classes
 {
     public class BonusGameController : GameController
     {
-        private int rndMoveFrequency = 10;
-        public BonusGameController() : base() { }
-        public BonusGameController(IFieldInfo fieldInfo) : base(fieldInfo) { }
+        private const int RndMoveFrequency = 10;
+
+        public BonusGameController(IFieldInfo fieldInfo) : base(fieldInfo)
+        {
+        }
+
         public override void MoveCell(Direction moveDirection)
         {
-            if (new Random().Next(0, 100) < rndMoveFrequency)
+            if (new Random().Next(0, 100) < RndMoveFrequency)
             {
-                for (int i = 0; i < CountRndMovesAmount(); i++)
-                {
-                    DoRndMove((Direction)CountRndMoveDirection());
-                }
+                for (var i = 0; i < CountRndMovesAmount(); i++) DoRndMove((Direction) CountRndMoveDirection());
             }
             else
             {
-                Cell emptyCell = _fieldInfo.Field.GetEmptyCell();
-                Cell moveCell = ChooseMovingCell(emptyCell.Row, emptyCell.Column, moveDirection);
-                _fieldInfo.Field.GetEmptyCell().Number = moveCell.Number;
-                _fieldInfo.Field.Cells[moveCell.Row, moveCell.Column].Number = 0;
+                var emptyCell = FieldInfo.Field.GetEmptyCell();
+                var moveCell = ChooseMovingCell(emptyCell.Row, emptyCell.Column, moveDirection);
+                FieldInfo.Field.GetEmptyCell().Number = moveCell.Number;
+                FieldInfo.Field.Cells[moveCell.Row, moveCell.Column].Number = 0;
             }
         }
 
@@ -40,19 +39,20 @@ namespace TagGameBLL.Classes
 
         private void DoRndMove(Direction moveDirection)
         {
-            Cell emptyCell = _fieldInfo.Field.GetEmptyCell();
-            Cell moveCell = new Cell();
+            var emptyCell = FieldInfo.Field.GetEmptyCell();
+            Cell moveCell;
             try
             {
                 moveCell = ChooseMovingCell(emptyCell.Row, emptyCell.Column, moveDirection);
             }
             catch (WrongMoveDirectionException e)
             {
-                DoRndMove((Direction)CountRndMoveDirection());
+                DoRndMove((Direction) CountRndMoveDirection());
                 return;
             }
-            _fieldInfo.Field.GetEmptyCell().Number = moveCell.Number;
-            _fieldInfo.Field.Cells[moveCell.Row, moveCell.Column].Number = 0;
+
+            FieldInfo.Field.GetEmptyCell().Number = moveCell.Number;
+            FieldInfo.Field.Cells[moveCell.Row, moveCell.Column].Number = 0;
         }
     }
 }

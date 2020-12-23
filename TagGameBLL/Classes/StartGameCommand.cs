@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using TagGameBLL.Interfaces;
 
 namespace TagGameBLL.Classes
 {
     public class StartGameCommand : ICommand
     {
-        private int _size;
-        private Difficult _difficult;
-        private IFieldCreator _fieldCreator;
+        private readonly Difficult _difficult;
+        private readonly IFieldCreator _fieldCreator;
+        private readonly int _size;
 
         public StartGameCommand(int size, Difficult difficult, IFieldCreator fieldCreator)
         {
@@ -16,6 +14,7 @@ namespace TagGameBLL.Classes
             _difficult = difficult;
             _fieldCreator = fieldCreator;
         }
+
         public void Execute()
         {
             _fieldCreator.GenerateField(_size, _difficult);

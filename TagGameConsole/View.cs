@@ -1,22 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using TagGameBLL.Exceptions;
 
 namespace TagGameConsole
 {
     public class View : IView
     {
+        public delegate void Handler();
+
         public int FieldSize { get; private set; }
         public int Difficult { get; private set; }
         public int Direction { get; private set; }
-
-        public delegate void Handler();
         public event Handler OnGameStarted;
         public event Handler OnMoveSelected;
         public event Handler OnUndoMove;
-
-        public View() { }
 
         public void ShowMenu()
         {
@@ -37,7 +33,7 @@ namespace TagGameConsole
                     ShowRules();
                     break;
                 case '3':
-                    System.Environment.Exit(0);
+                    Environment.Exit(0);
                     break;
                 default:
                     Console.WriteLine("Try again");
@@ -45,33 +41,30 @@ namespace TagGameConsole
                     break;
             }
         }
+
         public void ShowField(int[,] numbers)
         {
             Console.Clear();
             Console.WriteLine("Field:");
-            for (int row = 0; row < numbers.GetLength(0); row++)
+            for (var row = 0; row < numbers.GetLength(0); row++)
             {
-                for (int column = 0; column < numbers.GetLength(1); column++)
-                {
-                    Console.Write(String.Format("{0, 3}", numbers[row, column]) + " ");
-                }
+                for (var column = 0; column < numbers.GetLength(1); column++)
+                    Console.Write($"{numbers[row, column],3}" + " ");
                 Console.Write("\n");
             }
+
             Console.WriteLine("Press any -> to do move.\n" +
                               "Press Backspace to undo last move\n" +
                               "Press Esc to exit to the Main Menu");
-           
-            ListenKey();    
+
+            ListenKey();
         }
 
         public void ShowWinMenu()
         {
             Console.WriteLine("You Win!\n" +
                               "Press Esc to exit to main menu");
-            while (Console.ReadKey().Key != ConsoleKey.Escape)
-            {
-                continue;
-            }
+            while (Console.ReadKey().Key != ConsoleKey.Escape) continue;
             ShowMenu();
         }
 
@@ -92,12 +85,12 @@ namespace TagGameConsole
                                   "4. Bonus Game");
 
                 var difficult = Console.ReadLine();
-            
+
                 Difficult = Convert.ToInt32(difficult) - 1;
 
                 Console.WriteLine("Good! Press any key to continue :)");
                 Console.ReadKey();
-                OnGameStarted.Invoke();
+                OnGameStarted?.Invoke();
             }
             catch (FormatException e)
             {
@@ -117,16 +110,14 @@ namespace TagGameConsole
                 Console.WriteLine("Wrong number! Try again");
                 ShowPlayConfig();
             }
-
         }
 
         private void ShowRules()
         {
             Console.WriteLine("Rules will be there soon :)\n" +
-                "Press any key to return to start menu");
+                              "Press any key to return to start menu");
             Console.ReadKey();
             ShowMenu();
-            
         }
 
         private void ListenKey()
@@ -138,22 +129,22 @@ namespace TagGameConsole
                 {
                     case ConsoleKey.LeftArrow:
                         Direction = 0;
-                        OnMoveSelected.Invoke();
+                        OnMoveSelected?.Invoke();
                         break;
                     case ConsoleKey.RightArrow:
                         Direction = 1;
-                        OnMoveSelected.Invoke();
+                        OnMoveSelected?.Invoke();
                         break;
                     case ConsoleKey.UpArrow:
                         Direction = 2;
-                        OnMoveSelected.Invoke();
+                        OnMoveSelected?.Invoke();
                         break;
                     case ConsoleKey.DownArrow:
                         Direction = 3;
-                        OnMoveSelected.Invoke();
+                        OnMoveSelected?.Invoke();
                         break;
                     case ConsoleKey.Backspace:
-                        OnUndoMove.Invoke();
+                        OnUndoMove?.Invoke();
                         break;
                     case ConsoleKey.Escape:
                         ShowMenu();
@@ -172,8 +163,6 @@ namespace TagGameConsole
                                   "\nHistory is empty. You can't undo action now");
                 ListenKey();
             }
-            
         }
-
     }
 }

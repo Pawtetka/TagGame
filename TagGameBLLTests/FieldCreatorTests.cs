@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using TagGameBLL.Classes;
 using Xunit;
-using Moq;
-using TagGameBLL.Classes;
-using FluentAssertions;
 
 namespace TagGameBLLTests
 {
@@ -16,12 +11,12 @@ namespace TagGameBLLTests
         {
             //Arrange
             var stateFixture = new FieldStateFixture();
-            var fieldCreator = new FieldCreator(stateFixture.fieldInfo.Object);
+            var fieldCreator = new FieldCreator(stateFixture.FieldInfo.Object);
             //Act
             fieldCreator.GenerateField(size, Difficult.Easy);
             //Assert
-            Assert.Equal(stateFixture.fieldInfo.Object.Field.Cells.GetUpperBound(0) + 1, size);
-            Assert.NotEmpty(stateFixture.fieldInfo.Object.Field.Cells);
+            Assert.Equal(stateFixture.FieldInfo.Object.Field.Cells.GetUpperBound(0) + 1, size);
+            Assert.NotEmpty(stateFixture.FieldInfo.Object.Field.Cells);
         }
 
         [Fact]
@@ -29,11 +24,11 @@ namespace TagGameBLLTests
         {
             //Arrange
             var stateFixture = new FieldStateFixture();
-            var fieldCreator = new FieldCreator(stateFixture.fieldInfo.Object);
+            var fieldCreator = new FieldCreator(stateFixture.FieldInfo.Object);
             //Act
             fieldCreator.DeleteField();
             //Assert
-            Assert.Empty(stateFixture.fieldInfo.Object.Field.Cells);
+            Assert.Empty(stateFixture.FieldInfo.Object.Field.Cells);
         }
     }
 }

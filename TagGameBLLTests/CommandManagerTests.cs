@@ -1,9 +1,8 @@
-﻿using Moq;
-using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Text;
+using Moq;
 using TagGameBLL.Classes;
+using TagGameBLL.Interfaces;
 using Xunit;
 
 namespace TagGameBLLTests
@@ -36,7 +35,8 @@ namespace TagGameBLLTests
 
         [Theory]
         [ClassData(typeof(StartGameCommandTestData))]
-        public void CreateStartGameCommand_Success_CommandReturned(int size, Difficult difficult, IFieldCreator fieldCreator)
+        public void CreateStartGameCommand_Success_CommandReturned(int size, Difficult difficult,
+            IFieldCreator fieldCreator)
         {
             //Arrange
             var commandManager = new CommandManager();
@@ -63,19 +63,25 @@ namespace TagGameBLLTests
     {
         public IEnumerator<object[]> GetEnumerator()
         {
-            yield return new object[] { 3, Difficult.Easy, new FieldCreator() };
+            yield return new object[] {3, Difficult.Easy, new FieldCreator()};
         }
 
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
     }
 
     public class MoveCellCommandTestData : IEnumerable<object[]>
     {
         public IEnumerator<object[]> GetEnumerator()
         {
-            yield return new object[] { Direction.Down, new StandartGameController(new FieldInfo()) };
+            yield return new object[] {Direction.Down, new StandartGameController(new FieldInfo())};
         }
 
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
     }
 }

@@ -1,40 +1,40 @@
 ﻿using Moq;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using TagGameBLL.Classes;
+using TagGameBLL.Interfaces;
 using Xunit;
 
 namespace TagGameBLLTests
 {
     public class StartGameCommandTests
     {
-        private Mock<IFieldCreator> mock;
+        private readonly Mock<IFieldCreator> _mock;
+
         public StartGameCommandTests()
         {
-            mock = new Mock<IFieldCreator>();
+            _mock = new Mock<IFieldCreator>();
         }
+
         [Theory]
         [InlineData(3, Difficult.Easy)]
         public void Execute_Success_CreateFieldMethodTriggered(int size, Difficult difficult)
         {
             //Arrange
-            var command = new StartGameCommand(size, difficult, mock.Object);
+            var command = new StartGameCommand(size, difficult, _mock.Object);
             //Act
             command.Execute();
             //Assert
-            mock.Verify(creator => creator.GenerateField(size, difficult));
+            _mock.Verify(creator => creator.GenerateField(size, difficult));
         }
 
         [Fact]
         public void Undo_Success_DeleteFieldMethodTriggered()
         {
             //Arrange
-            var command = new StartGameCommand(3, Difficult.Easy, mock.Object);
+            var command = new StartGameCommand(3, Difficult.Easy, _mock.Object);
             //Act
             command.Undo();
             //Assert
-            mock.Verify(creator => creator.DeleteField());
+            _mock.Verify(creator => creator.DeleteField());
         }
     }
 }
