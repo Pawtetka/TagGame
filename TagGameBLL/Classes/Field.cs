@@ -1,31 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace TagGameBLL.Classes
+﻿namespace TagGameBLL.Classes
 {
     public class Field
     {
-        public Cell[,] Cells { get; set;} = new Cell[0,0];
-
-        public Field() { }
-
         private int[,] _winState;
 
-        public Field(int size)
-        {
-            Cells = new Cell[size,size];
-        }
+        public Cell[,] Cells { get; set; } = new Cell[0, 0];
 
         public Cell GetEmptyCell()
         {
-            foreach (Cell cell in Cells)
-            {
+            foreach (var cell in Cells)
                 if (cell.Number == 0)
-                {
                     return cell;
-                }
-            }
             return null;
         }
 
@@ -36,13 +21,9 @@ namespace TagGameBLL.Classes
 
         public bool CheckWinState()
         {
-            foreach (Cell cell in Cells)
-            {
+            foreach (var cell in Cells)
                 if (cell.Number != _winState[cell.Row, cell.Column])
-                {
                     return false;
-                }
-            }
             return true;
         }
 

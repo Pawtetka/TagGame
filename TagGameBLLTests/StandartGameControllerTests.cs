@@ -1,36 +1,21 @@
-﻿using System;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Text;
-using Moq;
-using Xunit;
-using TagGameBLL.Classes;
 using FluentAssertions;
-using System.Collections;
+using TagGameBLL.Classes;
 using TagGameBLL.Exceptions;
+using Xunit;
 
 namespace TagGameBLLTests
 {
     public class StandartGameControllerTests
     {
-        /*private Cell[,] cells;
-        private Mock<IFieldInfo> fieldInfo;
-        private Field field;
-        private FieldHistory fieldHistory;*/
-        private GameController gameController;
-        private FieldStateFixture stateFixture;
+        private readonly GameController _gameController;
+        private readonly FieldStateFixture _stateFixture;
+
         public StandartGameControllerTests()
         {
-            /*cells = new Cell[,]{
-                { new Cell{ Number = 1, Row = 0, Column = 0 }, new Cell{ Number = 2, Row = 0, Column = 1 } },
-                { new Cell{ Number = 3, Row = 1, Column = 0 }, new Cell{ Number = 0, Row = 1, Column = 1 } }
-            };
-            fieldInfo = new Mock<IFieldInfo>();
-            field = new Field();
-            fieldHistory = new FieldHistory();
-            fieldInfo.Setup(info => info.Field).Returns(field);
-            fieldInfo.Setup(info => info.FieldHistory).Returns(fieldHistory);*/
-            stateFixture = new FieldStateFixture();
-            gameController = new StandartGameController(stateFixture.fieldInfo.Object);
+            _stateFixture = new FieldStateFixture();
+            _gameController = new StandartGameController(_stateFixture.FieldInfo.Object);
         }
 
         [Theory]
@@ -38,11 +23,11 @@ namespace TagGameBLLTests
         public void MoveCell_Success_CellMoves(Direction direction, Cell[,] resultState)
         {
             //Arrange
-            stateFixture.fieldInfo.Object.Field.Cells = stateFixture.cells;
+            _stateFixture.FieldInfo.Object.Field.Cells = _stateFixture.Cells;
             //Act
-            gameController.MoveCell(direction);
+            _gameController.MoveCell(direction);
             //Assert
-            stateFixture.fieldInfo.Object.Field.Cells.Should().BeEquivalentTo(resultState);
+            _stateFixture.FieldInfo.Object.Field.Cells.Should().BeEquivalentTo(resultState);
         }
 
         [Theory]
@@ -51,10 +36,10 @@ namespace TagGameBLLTests
         public void MoveCell_WrongDirection_ThrownWrongDirectionException(Direction direction)
         {
             //Arrange
-            stateFixture.fieldInfo.Object.Field.Cells = stateFixture.cells;
+            _stateFixture.FieldInfo.Object.Field.Cells = _stateFixture.Cells;
             //Act
             //Assert
-            Assert.Throws<WrongMoveDirectionException>(() => gameController.MoveCell(direction));
+            Assert.Throws<WrongMoveDirectionException>(() => _gameController.MoveCell(direction));
         }
 
         [Fact]
@@ -62,21 +47,21 @@ namespace TagGameBLLTests
         {
             //Arrange
             //Act
-            gameController.SaveFieldState();
+            _gameController.SaveFieldState();
             //Assert
-            Assert.NotNull(stateFixture.fieldInfo.Object.FieldHistory.PopState());
+            Assert.NotNull(_stateFixture.FieldInfo.Object.FieldHistory.PopState());
         }
 
         [Fact]
         public void ResetState_Success_FieldResetedFromFieldHistory()
         {
             //Arrange
-            stateFixture.fieldInfo.Object.Field = new Field();
-            stateFixture.fieldInfo.Object.FieldHistory.AddState(new FieldMemento(stateFixture.cells));
+            _stateFixture.FieldInfo.Object.Field = new Field();
+            _stateFixture.FieldInfo.Object.FieldHistory.AddState(new FieldMemento(_stateFixture.Cells));
             //Act
-            gameController.UndoFieldState();
+            _gameController.UndoFieldState();
             //Assert
-            stateFixture.fieldInfo.Object.Field.Cells.Should().BeEquivalentTo(stateFixture.cells);
+            _stateFixture.FieldInfo.Object.Field.Cells.Should().BeEquivalentTo(_stateFixture.Cells);
         }
     }
 
@@ -84,16 +69,27 @@ namespace TagGameBLLTests
     {
         public IEnumerator<object[]> GetEnumerator()
         {
-            yield return new object[] { Direction.Down, new Cell[,]{
-                { new Cell{ Number = 1, Row = 0, Column = 0 }, new Cell{ Number = 0, Row = 0, Column = 1 } },
-                { new Cell{ Number = 3, Row = 1, Column = 0 }, new Cell{ Number = 2, Row = 1, Column = 1 } } }
+            yield return new object[]
+            {
+                Direction.Down, new[,]
+                {
+                    {new Cell {Number = 1, Row = 0, Column = 0}, new Cell {Number = 0, Row = 0, Column = 1}},
+                    {new Cell {Number = 3, Row = 1, Column = 0}, new Cell {Number = 2, Row = 1, Column = 1}}
+                }
             };
-            yield return new object[] { Direction.Right, new Cell[,]{
-                { new Cell{ Number = 1, Row = 0, Column = 0 }, new Cell{ Number = 2, Row = 0, Column = 1 } },
-                { new Cell{ Number = 0, Row = 1, Column = 0 }, new Cell{ Number = 3, Row = 1, Column = 1 } } }
+            yield return new object[]
+            {
+                Direction.Right, new[,]
+                {
+                    {new Cell {Number = 1, Row = 0, Column = 0}, new Cell {Number = 2, Row = 0, Column = 1}},
+                    {new Cell {Number = 0, Row = 1, Column = 0}, new Cell {Number = 3, Row = 1, Column = 1}}
+                }
             };
         }
 
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
     }
 }

@@ -1,31 +1,31 @@
-﻿using System;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Text;
+using FluentAssertions;
 using TagGameBLL.Classes;
 using Xunit;
-using Moq;
-using System.Collections;
-using FluentAssertions;
 
 namespace TagGameBLLTests
 {
     public class FieldTests
     {
-        private Field field;
-        private Cell[,] cells;
-        private int[,] winState;
+        private readonly Cell[,] _cells;
+        private readonly Field _field;
+        private int[,] _winState;
 
         public FieldTests()
         {
-            cells = new Cell[,]{
-                { new Cell { Number = 1, Row = 0, Column = 0 }, new Cell { Number = 2, Row = 0, Column = 1 } },
-                { new Cell { Number = 3, Row = 1, Column = 0 }, new Cell { Number = 0, Row = 1, Column = 1 } } };
-            field = new Field{ Cells = cells };
-            int[,] winStateStub = {
-                { 1, 2 },
-                { 3, 0 }
+            _cells = new[,]
+            {
+                {new Cell {Number = 1, Row = 0, Column = 0}, new Cell {Number = 2, Row = 0, Column = 1}},
+                {new Cell {Number = 3, Row = 1, Column = 0}, new Cell {Number = 0, Row = 1, Column = 1}}
             };
-            field.SetWinState(winStateStub);
+            _field = new Field {Cells = _cells};
+            int[,] winStateStub =
+            {
+                {1, 2},
+                {3, 0}
+            };
+            _field.SetWinState(winStateStub);
         }
 
         [Fact]
@@ -33,7 +33,7 @@ namespace TagGameBLLTests
         {
             //Arrange
             //Act
-            Cell result = field.GetEmptyCell();
+            var result = _field.GetEmptyCell();
             //Assert
             Assert.Equal(0, result.Number);
         }
@@ -43,7 +43,7 @@ namespace TagGameBLLTests
         {
             //Arrange
             //Act
-            bool result = field.CheckWinState();
+            var result = _field.CheckWinState();
             //Assert
             Assert.True(result);
         }
@@ -53,7 +53,7 @@ namespace TagGameBLLTests
         {
             //Arrange
             //Act
-            FieldMemento result = field.SaveState();
+            var result = _field.SaveState();
             //Assert
             Assert.NotNull(result);
         }
@@ -65,21 +65,29 @@ namespace TagGameBLLTests
             //Arrange
             var memento = new FieldMemento(newState);
             //Act
-            field.RestoreState(memento);
+            _field.RestoreState(memento);
             //Assert
-            field.Cells.Should().BeEquivalentTo(newState);
+            _field.Cells.Should().BeEquivalentTo(newState);
         }
     }
 
-    public class CellsTestData : IEnumerable<object[]>
+    internal class CellsTestData : IEnumerable<object[]>
     {
         public IEnumerator<object[]> GetEnumerator()
         {
-            yield return new object[] { new Cell[,]{
-                { new Cell { Number = 1, Row = 0, Column = 0 }, new Cell { Number = 3, Row = 0, Column = 1 } },
-                { new Cell { Number = 0, Row = 1, Column = 0 }, new Cell { Number = 2, Row = 1, Column = 1 } } } };
+            yield return new object[]
+            {
+                new[,]
+                {
+                    {new Cell {Number = 1, Row = 0, Column = 0}, new Cell {Number = 3, Row = 0, Column = 1}},
+                    {new Cell {Number = 0, Row = 1, Column = 0}, new Cell {Number = 2, Row = 1, Column = 1}}
+                }
+            };
         }
 
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
     }
 }

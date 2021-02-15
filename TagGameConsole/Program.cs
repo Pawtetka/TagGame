@@ -1,19 +1,19 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using System;
 using TagGameBLL.Classes;
+using TagGameBLL.Interfaces;
 
 namespace TagGameConsole
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             var services = new ServiceCollection();
             ConfigureServices(services);
             var serviceProvider = services.BuildServiceProvider();
 
             var presenter = serviceProvider.GetService<Presenter>();
-            presenter.ShowMenu();
+            presenter?.ShowMenu();
         }
 
         private static void ConfigureServices(IServiceCollection services)

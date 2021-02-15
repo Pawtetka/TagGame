@@ -1,9 +1,7 @@
 ﻿using Moq;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using TagGameBLL.Classes;
 using TagGameBLL.Exceptions;
+using TagGameBLL.Interfaces;
 using Xunit;
 
 namespace TagGameBLLTests
@@ -28,7 +26,8 @@ namespace TagGameBLLTests
         public void StartGame_WrongSize_ThrowsWrongSizeException(int size)
         {
             //Arrange
-            var gameManager = new GameManager(new CommandManager(), new FieldInfo()); ;
+            var gameManager = new GameManager(new CommandManager(), new FieldInfo());
+            
             //Act
             //Assert
             Assert.Throws<WrongSizeException>(() => gameManager.StartGame(size, 1));
@@ -41,9 +40,10 @@ namespace TagGameBLLTests
         {
             //Arrange
             var mock = new Mock<ICommandManager>();
-            ICommand command = new StartGameCommand(size, (Difficult)difficult, new FieldCreator());
-            mock.Setup(manager => manager.CreateStartGameCommand(It.IsAny<int>(), It.IsAny<Difficult>(), It.IsAny<IFieldCreator>())).
-                 Returns(command);
+            ICommand command = new StartGameCommand(size, (Difficult) difficult, new FieldCreator());
+            mock.Setup(manager =>
+                    manager.CreateStartGameCommand(It.IsAny<int>(), It.IsAny<Difficult>(), It.IsAny<IFieldCreator>()))
+                .Returns(command);
             var gameManager = new GameManager(mock.Object, new FieldInfo());
             //Act
             gameManager.StartGame(size, difficult);
@@ -69,9 +69,9 @@ namespace TagGameBLLTests
         {
             //Arrange
             var mock = new Mock<ICommandManager>();
-            ICommand command = new MoveCellCommand((Direction)direction, new StandartGameController(new FieldInfo()));
-            mock.Setup(manager => manager.SetMoveCellCommand(It.IsAny<Direction>(), It.IsAny<GameController>())).
-                 Returns(command);
+            ICommand command = new MoveCellCommand((Direction) direction, new StandartGameController(new FieldInfo()));
+            mock.Setup(manager => manager.SetMoveCellCommand(It.IsAny<Direction>(), It.IsAny<GameController>()))
+                .Returns(command);
             var gameManager = new GameManager(mock.Object, new FieldInfo());
             //Act
             gameManager.MoveCell(direction);
@@ -97,7 +97,7 @@ namespace TagGameBLLTests
             //Arrange
             var gameManager = new GameManager(new CommandManager(), new FieldInfo());
             //Act
-            int[,] rezult = gameManager.GetField();
+            var rezult = gameManager.GetField();
             //Assert
             Assert.NotNull(rezult);
         }
@@ -106,20 +106,25 @@ namespace TagGameBLLTests
         public void CheckWin_Success_BoolReturned()
         {
             //Arrange
-            Field fieldStub = new Field { Cells = new Cell[,]{
-                { new Cell { Number = 1, Row = 0, Column = 0 }, new Cell { Number = 2, Row = 0, Column = 1 } },
-                { new Cell { Number = 3, Row = 1, Column = 0 }, new Cell { Number = 0, Row = 1, Column = 1 } } }
+            var fieldStub = new Field
+            {
+                Cells = new[,]
+                {
+                    {new Cell {Number = 1, Row = 0, Column = 0}, new Cell {Number = 2, Row = 0, Column = 1}},
+                    {new Cell {Number = 3, Row = 1, Column = 0}, new Cell {Number = 0, Row = 1, Column = 1}}
+                }
             };
-            int[,] winStateStub = {
-                { 1, 2 },
-                { 3, 0 }
+            int[,] winStateStub =
+            {
+                {1, 2},
+                {3, 0}
             };
             fieldStub.SetWinState(winStateStub);
             var fieldMock = new Mock<IFieldInfo>();
             fieldMock.Setup(info => info.Field).Returns(fieldStub);
             var gameManager = new GameManager(new CommandManager(), fieldMock.Object);
             //Act
-            bool rezult = gameManager.CheckWin();
+            var rezult = gameManager.CheckWin();
             //Assert
             Assert.True(rezult);
         }

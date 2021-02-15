@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using FluentAssertions;
 using TagGameBLL.Classes;
 using TagGameBLL.Exceptions;
 using Xunit;
@@ -15,8 +13,13 @@ namespace TagGameBLLTests
             //Arrange
             var commandHistory = new CommandHistory();
             //Act
+            void Action() => commandHistory.GetCommand();
             //Assert
-            Assert.Throws<EmptyHistoryException>(() => commandHistory.GetCommand());
+            Assert.Throws<EmptyHistoryException>(Action);
         }
+
+        [Fact]
+        public void UPDATED_GetCommand_EmptyHistory_ThrowsEmptyHistoryException() => new CommandHistory()
+            .Invoking(x => x.GetCommand()).Should().Throw<EmptyHistoryException>();
     }
 }
